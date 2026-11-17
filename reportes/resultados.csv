@@ -1,0 +1,11 @@
+﻿id,nombre,esperado,obtenido,estado,duracion_s,detalle,captura
+CP-01,Inicio de sesión con credenciales válidas,Redirige a /inventory.html y muestra el título Products,URL inventory.html con título Products,Aprobado,1.59,,capturas\CP-01.png
+CP-02,Inicio de sesión con contraseña incorrecta,Epic sadface: Username and password do not match any user in this service,Epic sadface: Username and password do not match any user in this service,Aprobado,1.59,,capturas\CP-02.png
+CP-03,Inicio de sesión con usuario bloqueado,"Epic sadface: Sorry, this user has been locked out.","Epic sadface: Sorry, this user has been locked out.",Aprobado,1.56,,capturas\CP-03.png
+CP-04,Inicio de sesión con el campo de usuario vacío,Epic sadface: Username is required,Epic sadface: Username is required,Aprobado,1.49,,capturas\CP-04.png
+CP-05,Agregar un producto al carrito,Insignia del carrito = 1 y el botón cambia a Remove,Insignia del carrito = 1; botón Remove visible = sí,Aprobado,1.65,,capturas\CP-05.png
+CP-06,Ordenar productos por precio de menor a mayor,"Precios en orden ascendente: [7.99, 9.99, 15.99, 15.99, 29.99, 49.99]","Precios mostrados: [7.99, 9.99, 15.99, 15.99, 29.99, 49.99]",Aprobado,1.75,,capturas\CP-06.png
+CP-07,Completar una compra con datos válidos,Carrito con Sauce Labs Backpack; total = subtotal + impuesto; mensaje final: Thank you for your order!,"Carrito con Sauce Labs Backpack; subtotal $29.99, impuesto $2.4, total $32.39; mensaje final: Thank you for your order!",Aprobado,2.22,,capturas\CP-07.png
+CP-08,Intentar pagar sin código postal,Error: Postal Code is required,Error: Postal Code is required,Aprobado,1.93,,capturas\CP-08.png
+CP-09,Cerrar sesión desde el menú lateral,Regresa a la página de inicio de sesión y no permite volver al inventario sin autenticarse,Formulario de login visible = sí; acceso directo bloqueado con mensaje: Epic sadface: You can only access '/inventory.html' when you are logged in.,Aprobado,2.41,,capturas\CP-09.png
+CP-10,Ordenar productos por precio con el usuario problem_user,"Precios en orden ascendente: [7.99, 9.99, 15.99, 15.99, 29.99, 49.99]","Precios mostrados: [29.99, 9.99, 15.99, 49.99, 7.99, 15.99]",Fallido,1.78,El catálogo no se ordenó por precio para problem_user,capturas\CP-10.png

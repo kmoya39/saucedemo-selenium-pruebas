@@ -1,0 +1,113 @@
+{
+  "fecha": "2026-11-16 20:21:03",
+  "url": "https://www.saucedemo.com",
+  "sistema": "Windows 11",
+  "python": "3.14.2",
+  "selenium": "4.52.0",
+  "total": 10,
+  "aprobados": 9,
+  "fallidos": 1,
+  "errores": 0,
+  "casos": [
+    {
+      "id": "CP-01",
+      "nombre": "Inicio de sesión con credenciales válidas",
+      "esperado": "Redirige a /inventory.html y muestra el título Products",
+      "obtenido": "URL inventory.html con título Products",
+      "estado": "Aprobado",
+      "duracion_s": 1.59,
+      "detalle": "",
+      "captura": "capturas\\CP-01.png"
+    },
+    {
+      "id": "CP-02",
+      "nombre": "Inicio de sesión con contraseña incorrecta",
+      "esperado": "Epic sadface: Username and password do not match any user in this service",
+      "obtenido": "Epic sadface: Username and password do not match any user in this service",
+      "estado": "Aprobado",
+      "duracion_s": 1.59,
+      "detalle": "",
+      "captura": "capturas\\CP-02.png"
+    },
+    {
+      "id": "CP-03",
+      "nombre": "Inicio de sesión con usuario bloqueado",
+      "esperado": "Epic sadface: Sorry, this user has been locked out.",
+      "obtenido": "Epic sadface: Sorry, this user has been locked out.",
+      "estado": "Aprobado",
+      "duracion_s": 1.56,
+      "detalle": "",
+      "captura": "capturas\\CP-03.png"
+    },
+    {
+      "id": "CP-04",
+      "nombre": "Inicio de sesión con el campo de usuario vacío",
+      "esperado": "Epic sadface: Username is required",
+      "obtenido": "Epic sadface: Username is required",
+      "estado": "Aprobado",
+      "duracion_s": 1.49,
+      "detalle": "",
+      "captura": "capturas\\CP-04.png"
+    },
+    {
+      "id": "CP-05",
+      "nombre": "Agregar un producto al carrito",
+      "esperado": "Insignia del carrito = 1 y el botón cambia a Remove",
+      "obtenido": "Insignia del carrito = 1; botón Remove visible = sí",
+      "estado": "Aprobado",
+      "duracion_s": 1.65,
+      "detalle": "",
+      "captura": "capturas\\CP-05.png"
+    },
+    {
+      "id": "CP-06",
+      "nombre": "Ordenar productos por precio de menor a mayor",
+      "esperado": "Precios en orden ascendente: [7.99, 9.99, 15.99, 15.99, 29.99, 49.99]",
+      "obtenido": "Precios mostrados: [7.99, 9.99, 15.99, 15.99, 29.99, 49.99]",
+      "estado": "Aprobado",
+      "duracion_s": 1.75,
+      "detalle": "",
+      "captura": "capturas\\CP-06.png"
+    },
+    {
+      "id": "CP-07",
+      "nombre": "Completar una compra con datos válidos",
+      "esperado": "Carrito con Sauce Labs Backpack; total = subtotal + impuesto; mensaje final: Thank you for your order!",
+      "obtenido": "Carrito con Sauce Labs Backpack; subtotal $29.99, impuesto $2.4, total $32.39; mensaje final: Thank you for your order!",
+      "estado": "Aprobado",
+      "duracion_s": 2.22,
+      "detalle": "",
+      "captura": "capturas\\CP-07.png"
+    },
+    {
+      "id": "CP-08",
+      "nombre": "Intentar pagar sin código postal",
+      "esperado": "Error: Postal Code is required",
+      "obtenido": "Error: Postal Code is required",
+      "estado": "Aprobado",
+      "duracion_s": 1.93,
+      "detalle": "",
+      "captura": "capturas\\CP-08.png"
+    },
+    {
+      "id": "CP-09",
+      "nombre": "Cerrar sesión desde el menú lateral",
+      "esperado": "Regresa a la página de inicio de sesión y no permite volver al inventario sin autenticarse",
+      "obtenido": "Formulario de login visible = sí; acceso directo bloqueado con mensaje: Epic sadface: You can only access '/inventory.html' when you are logged in.",
+      "estado": "Aprobado",
+      "duracion_s": 2.41,
+      "detalle": "",
+      "captura": "capturas\\CP-09.png"
+    },
+    {
+      "id": "CP-10",
+      "nombre": "Ordenar productos por precio con el usuario problem_user",
+      "esperado": "Precios en orden ascendente: [7.99, 9.99, 15.99, 15.99, 29.99, 49.99]",
+      "obtenido": "Precios mostrados: [29.99, 9.99, 15.99, 49.99, 7.99, 15.99]",
+      "estado": "Fallido",
+      "duracion_s": 1.78,
+      "detalle": "El catálogo no se ordenó por precio para problem_user",
+      "captura": "capturas\\CP-10.png"
+    }
+  ]
+}
