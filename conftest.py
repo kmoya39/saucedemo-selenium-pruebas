@@ -10,11 +10,14 @@ import csv
 import json
 import os
 import platform
+import subprocess
 from datetime import datetime
 
 import pytest
 import selenium
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.selenium_manager import SeleniumManager
 
 import config
 
@@ -22,8 +25,30 @@ RESULTADOS = []
 os.makedirs(os.path.join(config.CARPETA_REPORTES, "capturas"), exist_ok=True)
 
 
+@pytest.fixture(scope="session")
+def ruta_chromedriver():
+    """
+    Obtiene una sola vez la ruta del ChromeDriver compatible con el Chrome instalado.
+
+    Se invoca Selenium Manager con la entrada estándar redirigida a DEVNULL porque en Windows,
+    cuando pytest captura la consola, la llamada interna de Selenium puede fallar con
+    "WinError 6 The handle is invalid". Si existe la variable CHROMEDRIVER, se usa esa ruta.
+    """
+    if os.getenv("CHROMEDRIVER"):
+        return os.getenv("CHROMEDRIVER")
+    comando = [str(SeleniumManager._get_binary()), "--browser", "chrome",
+               "--language-binding", "python", "--output", "json"]
+    for _ in range(3):  # reintentos por si la red falla al descargar el driver
+        salida = subprocess.run(comando, stdin=subprocess.DEVNULL, capture_output=True, text=True)
+        try:
+            return json.loads(salida.stdout)["result"]["driver_path"]
+        except (ValueError, KeyError):
+            continue
+    pytest.exit(f"No se pudo obtener ChromeDriver con Selenium Manager: {salida.stderr or salida.stdout}")
+
+
 @pytest.fixture
-def driver():
+def driver(ruta_chromedriver):
     opciones = webdriver.ChromeOptions()
     if config.HEADLESS:
         opciones.add_argument("--headless=new")
@@ -36,7 +61,7 @@ def driver():
     })
     opciones.add_argument("--disable-features=PasswordLeakDetection")
     # Selenium Manager descarga automáticamente el ChromeDriver compatible con el Chrome instalado
-    navegador = webdriver.Chrome(options=opciones)
+    navegador = webdriver.Chrome(service=Service(executable_path=ruta_chromedriver), options=opciones)
     yield navegador
     navegador.quit()
 
@@ -53,7 +78,8 @@ def registro(request):
 def pytest_runtest_makereport(item, call):
     resultado = yield
     reporte = resultado.get_result()
-    if reporte.when != "call":
+    # Se registra la fase de ejecución y también los errores de preparación (por ejemplo, el navegador)
+    if reporte.when != "call" and not (reporte.when == "setup" and reporte.failed):
         return
 
     marca = item.get_closest_marker("caso")
@@ -63,11 +89,14 @@ def pytest_runtest_makereport(item, call):
     # Captura de pantalla como evidencia del estado final del caso
     captura = ""
     navegador = item.funcargs.get("driver")
-    if navegador is not None:
+    if navegador is not None and reporte.when == "call":
         captura = os.path.join("capturas", f"{id_caso}.png")
         navegador.save_screenshot(os.path.join(config.CARPETA_REPORTES, captura))
 
-    estado = "Aprobado" if reporte.passed else "Fallido"
+    if reporte.when == "setup":
+        estado = "Error de ambiente"
+    else:
+        estado = "Aprobado" if reporte.passed else "Fallido"
     detalle = ""
     if reporte.failed:
         detalle = str(call.excinfo.value).splitlines()[0] if call.excinfo else "Error"
@@ -103,6 +132,7 @@ def pytest_sessionfinish(session, exitstatus):
         "total": len(RESULTADOS),
         "aprobados": sum(r["estado"] == "Aprobado" for r in RESULTADOS),
         "fallidos": sum(r["estado"] == "Fallido" for r in RESULTADOS),
+        "errores": sum(r["estado"] == "Error de ambiente" for r in RESULTADOS),
         "casos": RESULTADOS,
     }
     with open(os.path.join(config.CARPETA_REPORTES, "resultados.json"), "w", encoding="utf-8") as archivo:
